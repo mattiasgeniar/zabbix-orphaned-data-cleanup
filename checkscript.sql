@@ -69,3 +69,14 @@ SELECT COUNT(*) FROM screens_items WHERE screenid NOT IN (SELECT screenid FROM s
 -- Count the amount of rows that would be deleted for orphaned events & triggers
 SELECT COUNT(*) FROM trigger_depends WHERE triggerid_down NOT IN (SELECT triggerid FROM triggers);
 SELECT COUNT(*) FROM trigger_depends WHERE triggerid_up NOT IN (SELECT triggerid FROM triggers);
+
+-- Count the amount of records in the history/trends table for items that no longer exist
+SELECT COUNT(itemid) FROM history WHERE itemid NOT IN (SELECT itemid FROM items);
+SELECT COUNT(itemid) FROM history_uint WHERE itemid NOT IN (SELECT itemid FROM items);
+SELECT COUNT(itemid) FROM history_log WHERE itemid NOT IN (SELECT itemid FROM items);
+SELECT COUNT(itemid) FROM history_str WHERE itemid NOT IN (SELECT itemid FROM items);
+SELECT COUNT(itemid) FROM history_sync WHERE itemid NOT IN (SELECT itemid FROM items);
+SELECT COUNT(itemid) FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);
+
+SELECT COUNT(itemid) FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);
+SELECT COUNT(itemid) FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);
