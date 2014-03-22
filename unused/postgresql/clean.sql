@@ -6,4 +6,3 @@ delete from history_log where itemid not in (select itemid from items where stat
 
 delete from trends where itemid not in (select itemid from items where status='0');
 delete from trends_uint where itemid not in (select itemid from items where status='0');
-
