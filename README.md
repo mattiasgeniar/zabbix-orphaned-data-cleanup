@@ -27,3 +27,9 @@ The queries are tested against Zabbix 1.8 and 2.0. Aplly with caution to other v
 #### Delete all history for disabled items
 
     user@host-$ psql zabbix < unused/postgresql/clean.sql
+
+#### Stop zabbix email flood (mysql, pgsql)
+
+    user@host-$ sudo service zabbix-server stop
+    user@host-$ psql zabbix < stop-email/stop-alerts (use delete-alerts if you're not interested in alert history)
+    user@host-$ sudo service zabbix-server start
