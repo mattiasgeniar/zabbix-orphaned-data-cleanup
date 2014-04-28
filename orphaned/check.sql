@@ -1,48 +1,48 @@
 -- Count the amount of rows that would be deleted for all orphaned acknowledge entries
-SELECT COUNT(*) FROM acknowledges WHERE NOT userid IN (SELECT userid FROM users);
-SELECT COUNT(*) FROM acknowledges WHERE NOT eventid IN (SELECT eventid FROM events);
+SELECT COUNT(*) AS ACK_MISSING_UID FROM acknowledges WHERE NOT userid IN (SELECT userid FROM users);
+SELECT COUNT(*) AS ACK_MISSING_EID FROM acknowledges WHERE NOT eventid IN (SELECT eventid FROM events);
 
 -- Count the amount of rows that would be deleted for orphaned alerts entries
-SELECT COUNT(*) FROM alerts WHERE NOT actionid IN (SELECT actionid FROM actions);
-SELECT COUNT(*) FROM alerts WHERE NOT eventid IN (SELECT eventid FROM events);
-SELECT COUNT(*) FROM alerts WHERE NOT userid IN (SELECT userid FROM users);
-SELECT COUNT(*) FROM alerts WHERE NOT mediatypeid IN (SELECT mediatypeid FROM media_type);
+SELECT COUNT(*) AS ALERTS_MISSING_AID FROM alerts WHERE NOT actionid IN (SELECT actionid FROM actions);
+SELECT COUNT(*) AS ALERTS_MISSING_EID FROM alerts WHERE NOT eventid IN (SELECT eventid FROM events);
+SELECT COUNT(*) AS ALERTS_MISSING_UID FROM alerts WHERE NOT userid IN (SELECT userid FROM users);
+SELECT COUNT(*) AS ALERTS_MISSING_MID FROM alerts WHERE NOT mediatypeid IN (SELECT mediatypeid FROM media_type);
 
 -- Count the amount of rows that would be deleted for orphaned application entries that no longer map back to a host
-SELECT COUNT(*) FROM applications WHERE NOT hostid IN (SELECT hostid FROM hosts);
+SELECT COUNT(*) AS APPS_MISSING_HID FROM applications WHERE NOT hostid IN (SELECT hostid FROM hosts);
 
 -- Count the amount of rows that would be deleted for orphaned auditlog details (such as logins)
-SELECT COUNT(*) FROM auditlog_details WHERE NOT auditid IN (SELECT auditid FROM auditlog);
-SELECT COUNT(*) FROM auditlog WHERE NOT userid IN (SELECT userid FROM users);
+SELECT COUNT(*) AS AUDITLOG_MISSING_AID FROM auditlog_details WHERE NOT auditid IN (SELECT auditid FROM auditlog);
+SELECT COUNT(*) AS AUDITLOG_MISSING_UID FROM auditlog WHERE NOT userid IN (SELECT userid FROM users);
 
 -- Count the amount of rows that would be deleted for orphaned conditions
-SELECT COUNT(*) FROM conditions WHERE NOT actionid IN (SELECT actionid FROM actions);
+SELECT COUNT(*) AS COND_MISSING_AID FROM conditions WHERE NOT actionid IN (SELECT actionid FROM actions);
 
 -- Count the amount of rows that would be deleted for orphaned functions
-SELECT COUNT(*) FROM functions WHERE NOT itemid IN (SELECT itemid FROM items);
-SELECT COUNT(*) FROM functions WHERE NOT triggerid IN (SELECT triggerid FROM triggers);
+SELECT COUNT(*) AS FUNC_MISSING_IID FROM functions WHERE NOT itemid IN (SELECT itemid FROM items);
+SELECT COUNT(*) AS FUNC_MISSING_TID FROM functions WHERE NOT triggerid IN (SELECT triggerid FROM triggers);
 
 -- Count the amount of rows that would be deleted for orphaned graph items
-SELECT COUNT(*) FROM graphs_items WHERE NOT graphid IN (SELECT graphid FROM graphs);
-SELECT COUNT(*) FROM graphs_items WHERE NOT itemid IN (SELECT itemid FROM items);
+SELECT COUNT(*) AS GRAPHS_MISSING_GID FROM graphs_items WHERE NOT graphid IN (SELECT graphid FROM graphs);
+SELECT COUNT(*) AS GRAPHS_MISSING_IID FROM graphs_items WHERE NOT itemid IN (SELECT itemid FROM items);
 
 -- Count the amount of rows that would be deleted for orphaned host_profiles
-SELECT COUNT(*) FROM hosts_profiles WHERE NOT hostid IN (SELECT hostid FROM hosts);
-SELECT COUNT(*) FROM hosts_profiles_ext WHERE NOT hostid IN (SELECT hostid FROM hosts);
+SELECT COUNT(*) AS HOSTPROFS_MISSING_HID FROM hosts_profiles WHERE NOT hostid IN (SELECT hostid FROM hosts);
+SELECT COUNT(*) AS HOSTPROFEXT_MISSING_HID FROM hosts_profiles_ext WHERE NOT hostid IN (SELECT hostid FROM hosts);
 
 -- Count the amount of rows that would be deleted for orphaned host macro's
-SELECT COUNT(*) FROM hostmacro WHERE NOT hostid IN (SELECT hostid FROM hosts);
+SELECT COUNT(*) AS HOSTMACRO_MISSING_HID FROM hostmacro WHERE NOT hostid IN (SELECT hostid FROM hosts);
 
 -- Count the amount of rows that would be deleted for orphaned item data
-SELECT COUNT(*) FROM items WHERE hostid NOT IN (SELECT hostid FROM hosts);
-SELECT COUNT(*) FROM items_applications WHERE applicationid NOT IN (SELECT applicationid FROM applications);
-SELECT COUNT(*) FROM items_applications WHERE itemid NOT IN (SELECT itemid FROM items);
+SELECT COUNT(*) AS ITEMS_MISSING_HID FROM items WHERE hostid NOT IN (SELECT hostid FROM hosts);
+SELECT COUNT(*) AS ITEMSAPP_MISSING_AID FROM items_applications WHERE applicationid NOT IN (SELECT applicationid FROM applications);
+SELECT COUNT(*) AS ITEMSAPP_MISSING_IID FROM items_applications WHERE itemid NOT IN (SELECT itemid FROM items);
 
 -- Count the amount of rows that would be deleted for orphaned HTTP check data
-SELECT COUNT(*) FROM httpstep WHERE NOT httptestid IN (SELECT httptestid FROM httptest);
-SELECT COUNT(*) FROM httpstepitem WHERE NOT httpstepid IN (SELECT httpstepid FROM httpstep);
-SELECT COUNT(*) FROM httpstepitem WHERE NOT itemid IN (SELECT itemid FROM items);
-SELECT COUNT(*) FROM httptest WHERE applicationid NOT IN (SELECT applicationid FROM applications);
+SELECT COUNT(*) AS HTTPST_MISSING_HID FROM httpstep WHERE NOT httptestid IN (SELECT httptestid FROM httptest);
+SELECT COUNT(*) AS HTTPSTI_MISSING_HSID FROM httpstepitem WHERE NOT httpstepid IN (SELECT httpstepid FROM httpstep);
+SELECT COUNT(*) AS ITEMSSTI_MISSING_IID FROM httpstepitem WHERE NOT itemid IN (SELECT itemid FROM items);
+SELECT COUNT(*) AS HTTPT_MISSING_AID FROM httptest WHERE applicationid NOT IN (SELECT applicationid FROM applications);
 
 -- Count the amount of rows that would be deleted for orphaned maintenance data
 SELECT COUNT(*) FROM maintenances_groups WHERE maintenanceid NOT IN (SELECT maintenanceid FROM maintenances);
