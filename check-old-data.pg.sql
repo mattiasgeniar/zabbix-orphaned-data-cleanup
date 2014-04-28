@@ -1,5 +1,5 @@
 -- keep 1 week of history and 3 months of trends
-\set history_interval 6
+\set history_interval 7
 \set trends_interval 90
 
 SELECT count(alertid) AS alerts FROM alerts where age(to_timestamp(alerts.clock)) > (:history_interval * interval '1 day');
