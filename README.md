@@ -6,9 +6,9 @@ If you have a large database please note that these can take a while (read: a fe
 
 Use the queries above on your own risk. Take *backups* first.
 
-Queries named "*.pg.sql" (i.e. delete-old-data.pg.sql) only work for Postgresql. Pay attention.
+Some scripts are Mysql or Postgresql specific, they're named *.my.sql and *.pg.sql, respectively. Pay attention.
 
-##### NOTE
+#### NOTE
 The queries were tested against Zabbix 1.8 and 2.0. Apply with caution to other versions. Consider reporting the results, whether succesful or not.
 
 
