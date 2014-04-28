@@ -1,2 +1,2 @@
-update alerts set status=2,error='' where status=0 and alerttype=0;
-truncate escalations;
+UPDATE alerts SET status=2,error='' WHERE status=0 AND alerttype=0;
+TRUNCATE escalations;

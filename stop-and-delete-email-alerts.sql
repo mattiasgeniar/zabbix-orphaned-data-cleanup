@@ -1,3 +1,2 @@
-truncate alerts;
-truncate escalations;
-
+TRUNCATE alerts;
+TRUNCATE escalations;
