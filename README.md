@@ -14,11 +14,11 @@ The queries were tested against Zabbix 1.8 and 2.0. Apply with caution to other 
 
 #### Check how many orphaned rows do you have
 
-    user@host-$ myql zabbix < check-orphaned-data.sql
+    user@host-$ mysql zabbix < check-orphaned-data.sql
 
 #### Delete orphaned rows
 
-    user@host-$ myql zabbix < delete-orphaned-data.sql
+    user@host-$ mysql zabbix < delete-orphaned-data.sql
 
 #### Delete old data (1 week for history, 3 months for trends - edit sql at your own discretion)
 
