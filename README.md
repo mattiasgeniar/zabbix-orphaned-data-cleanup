@@ -4,7 +4,7 @@ This repo contains a few useful queries for Zabbix database, mostly to cleanup o
 
 If you have a large database please note that these can take a while (read: a few hours is normal).
 
-Use the queries above on your own risk. Take *backups* first.
+Use the queries above on your own risk. Take **backups** first.
 
 Some scripts are Mysql or Postgresql specific, they're named *.my.sql and *.pg.sql, respectively. Pay attention.
 
@@ -31,5 +31,7 @@ The queries were tested against Zabbix 1.8 and 2.0. Apply with caution to other 
 #### Stop zabbix email flood (mysql, pgsql)
 
     user@host-$ sudo service zabbix-server stop
-    user@host-$ psql zabbix < stop-email-alerts.sql (use stop-and-delete-email-alerts.sql if you're not interested in alert history)
+    user@host-$ psql zabbix < stop-email-alerts.sql
     user@host-$ sudo service zabbix-server start
+
+Use stop-and-delete-email-alerts.sql if you're not interested in alert history.
