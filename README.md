@@ -30,8 +30,9 @@ The queries were tested against Zabbix 1.8 and 2.0. Apply with caution to other 
 
 #### Stop zabbix email flood (mysql, pgsql)
 
+(Use stop-and-delete-email-alerts.sql if you're not interested in alert history)
+
     user@host-$ sudo service zabbix-server stop
     user@host-$ psql zabbix < stop-email-alerts.sql
     user@host-$ sudo service zabbix-server start
 
-Use stop-and-delete-email-alerts.sql if you're not interested in alert history.
