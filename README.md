@@ -32,10 +32,10 @@ Orphaned data is history which belongs to deleted hosts and similar.
 
 This set of queries allows you to delete all data older than a specified period. Default is 1 week for history, 3 months for trends - edit sql at your own discretion.
 
-    mysql zabbix < check-old-data.sql
+    mysql zabbix < check-old-data.my.sql
     psql -A -R ' : ' -P 'footer=off' zabbix < check-old-data.pg.sql
 
-    mysql zabbix < delete-old-data.sql
+    mysql zabbix < delete-old-data.my.sql
     psql -A -R ' : ' -P 'footer=off' zabbix < delete-old-data.pg.sql
 
 #### Unused data
