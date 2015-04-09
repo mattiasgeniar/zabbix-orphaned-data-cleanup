@@ -1,16 +1,16 @@
-## Zabbix SQL repo
+# Zabbix SQL repo
 
 This repo contains a few useful queries for Zabbix database, mostly to cleanup old and/or orphaned data.
 
+### Important notes
+
 If you have a large database please note that these can take a while (read: a few hours is normal).
 
-Use the queries above on your own risk. Take **backups** first.
+Use the queries on your own risk. Take **backups** first. The queries were tested against Zabbix 1.8-2.2. 
 
-Some scripts are Mysql or Postgresql specific, they're named *.my.sql and *.pg.sql, respectively. Pay attention.
+Some scripts are Mysql or Postgresql specific, they're named *.my.sql and *.pg.sql, respectively. Some are also Zabbix version specific. Filenames are self-explaining.
 
-#### NOTE
-The queries were tested against Zabbix 1.8 and 2.0. Apply with caution to other versions. Consider reporting the results, whether succesful or not.
-
+### Usage
 
 #### Check how many orphaned rows do you have
 
