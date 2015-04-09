@@ -5,7 +5,7 @@ This repo contains a few useful queries for Zabbix database, mostly to cleanup o
 - [Important notes] (#important-notes)
 - [Usage] (#usage)
   * [Orphaned data] (#orphaned-data)
-  * [Old data] (#check-old-data)
+  * [Old data] (#old-data)
   * [Usused data] (#unused-data)
   * [Stop email flood] (#stop-email-flood)
 
@@ -20,7 +20,7 @@ This repo contains a few useful queries for Zabbix database, mostly to cleanup o
 
 #### Orphaned data
 
-Orphaned data is history belonging to deleted hosts and similar.
+Orphaned data is history which belongs to deleted hosts and similar.
 
     mysql zabbix < check-orphaned-data.sql
     psql -A -R ' : ' -P 'footer=off' zabbix < check-orphaned-data.zbx2x.sql
