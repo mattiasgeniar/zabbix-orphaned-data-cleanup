@@ -14,24 +14,24 @@ Some scripts are Mysql or Postgresql specific, they're named *.my.sql and *.pg.s
 
 #### Check how many orphaned rows do you have
 
-    user@host-$ mysql zabbix < check-orphaned-data.sql
+    # mysql zabbix < check-orphaned-data.sql
 
 #### Delete orphaned rows
 
-    user@host-$ mysql zabbix < delete-orphaned-data.sql
+    # mysql zabbix < delete-orphaned-data.sql
 
 #### Delete old data (1 week for history, 3 months for trends - edit sql at your own discretion)
 
-    user@host-$ psql -A -R ' : ' -P 'footer=off' zabbix < delete-old-data.pg.sql
+    # psql -A -R ' : ' -P 'footer=off' zabbix < delete-old-data.pg.sql
 
 #### Delete all history for disabled items
 
-    user@host-$ psql -A -R ' : '  -P 'footer=off' zabbix < delete-unused-data.sql
+    # psql -A -R ' : '  -P 'footer=off' zabbix < delete-unused-data.sql
 
 #### Stop zabbix email flood (mysql, pgsql)
 
 (Use stop-and-delete-email-alerts.sql if you're not interested in alert history)
 
-    user@host-$ sudo service zabbix-server stop
-    user@host-$ psql zabbix < stop-email-alerts.sql
-    user@host-$ sudo service zabbix-server start
+    # sudo service zabbix-server stop
+    # psql zabbix < stop-email-alerts.sql
+    # sudo service zabbix-server start
