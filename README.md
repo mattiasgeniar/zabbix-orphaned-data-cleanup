@@ -4,9 +4,8 @@ This repo contains a few useful queries for Zabbix database, mostly to cleanup o
 
 - [Important notes] (#important-notes)
 - [Usage] (#usage)
-  * Check orphaned rows (#check-orphaned-rows)
-  * Delete orphaned rows (#delete-orphaned-rows)
-
+  * [Check orphaned rows] (#check-orphaned-rows)
+  * [Delete orphaned rows] (#delete-orphaned-rows)
 ### Important notes
 
 If you have a large database please note that these can take a while (read: a few hours is normal).
