@@ -22,11 +22,11 @@ The queries were tested against Zabbix 1.8 and 2.0. Apply with caution to other 
 
 #### Delete old data (1 week for history, 3 months for trends - edit sql at your own discretion)
 
-    user@host-$ psql zabbix < delete-old-data.pg.sql
+    user@host-$ psql -A -R ' : ' -P 'footer=off' zabbix < delete-old-data.pg.sql
 
 #### Delete all history for disabled items
 
-    user@host-$ psql zabbix < delete-unused-data.sql
+    user@host-$ psql -A -R ' : '  -P 'footer=off' zabbix < delete-unused-data.sql
 
 #### Stop zabbix email flood (mysql, pgsql)
 
@@ -35,4 +35,3 @@ The queries were tested against Zabbix 1.8 and 2.0. Apply with caution to other 
     user@host-$ sudo service zabbix-server stop
     user@host-$ psql zabbix < stop-email-alerts.sql
     user@host-$ sudo service zabbix-server start
-
