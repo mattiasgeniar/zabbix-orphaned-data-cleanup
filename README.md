@@ -2,6 +2,11 @@
 
 This repo contains a few useful queries for Zabbix database, mostly to cleanup old and/or orphaned data.
 
+- [Important notes] (#important-notes)
+- [Usage] (#usage)
+  * Check orphaned rows (#check-orphaned-rows)
+  * Delete orphaned rows (#delete-orphaned-rows)
+
 ### Important notes
 
 If you have a large database please note that these can take a while (read: a few hours is normal).
@@ -12,7 +17,7 @@ Some scripts are Mysql or Postgresql specific, they're named *.my.sql and *.pg.s
 
 ### Usage
 
-#### Check how many orphaned rows do you have
+#### Check orphaned rows
 
     # mysql zabbix < check-orphaned-data.sql
 
