@@ -6,7 +6,7 @@ This repo contains a few useful queries for Zabbix database, mostly to cleanup o
 - [Usage] (#usage)
   * [Orphaned data] (#orphaned-data)
   * [Old data] (#old-data)
-  * [Usused data] (#unused-data)
+  * [Unused data] (#unused-data)
   * [Stop email flood] (#stop-email-flood)
 
 ### Important notes
