@@ -4,38 +4,54 @@ This repo contains a few useful queries for Zabbix database, mostly to cleanup o
 
 - [Important notes] (#important-notes)
 - [Usage] (#usage)
-  * [Check orphaned rows] (#check-orphaned-rows)
-  * [Delete orphaned rows] (#delete-orphaned-rows)
+  * [Orphaned data] (#orphaned-data)
+  * [Old data] (#check-old-data)
+  * [Usused data] (#unused-data)
+  * [Stop email flood] (#stop-email-flood)
+
 ### Important notes
 
-If you have a large database please note that these can take a while (read: a few hours is normal).
-
-Use the queries on your own risk. Take **backups** first. The queries were tested against Zabbix 1.8-2.2. 
-
-Some scripts are Mysql or Postgresql specific, they're named *.my.sql and *.pg.sql, respectively. Some are also Zabbix version specific. Filenames are self-explaining.
+* If you have a large database please note that these can take a while (a few hours is normal).
+* Use the queries on your own risk. Take **backups** first. The queries were (mostly) tested against Zabbix 1.8-2.2. 
+* Some scripts are Mysql or Postgresql specific, they're named *.my.sql and *.pg.sql, respectively. Some are also Zabbix version specific. Filenames are self-explaining.
+* Patches are welcome.
 
 ### Usage
 
-#### Check orphaned rows
+#### Orphaned data
 
-    # mysql zabbix < check-orphaned-data.sql
+Orphaned data is history belonging to deleted hosts and similar.
 
-#### Delete orphaned rows
+    mysql zabbix < check-orphaned-data.sql
+    psql -A -R ' : ' -P 'footer=off' zabbix < check-orphaned-data.zbx2x.sql
 
-    # mysql zabbix < delete-orphaned-data.sql
+    mysql zabbix < delete-orphaned-data.sql
+    psql -A -R ' : ' -P 'footer=off' zabbix < delete-orphaned-data.zbx2x.sql
 
-#### Delete old data (1 week for history, 3 months for trends - edit sql at your own discretion)
+#### Old data
 
-    # psql -A -R ' : ' -P 'footer=off' zabbix < delete-old-data.pg.sql
+This set of queries allows you to delete all data older than a specified period. Default is 1 week for history, 3 months for trends - edit sql at your own discretion.
 
-#### Delete all history for disabled items
+    mysql zabbix < check-old-data.sql
+    psql -A -R ' : ' -P 'footer=off' zabbix < check-old-data.pg.sql
 
-    # psql -A -R ' : '  -P 'footer=off' zabbix < delete-unused-data.sql
+    mysql zabbix < delete-old-data.sql
+    psql -A -R ' : ' -P 'footer=off' zabbix < delete-old-data.pg.sql
 
-#### Stop zabbix email flood (mysql, pgsql)
+#### Unused data
+
+This deletes all history for disabled items. May come in handy when you disable a significant number of items and no longer need the collected data.
+
+    mysql zabbix < check-unused-data.sql
+    psql -A -R ' : '  -P 'footer=off' zabbix < check-unused-data.sql
+
+    mysql zabbix < delete-unused-data.sql
+    psql -A -R ' : '  -P 'footer=off' zabbix < delete-unused-data.sql
+
+#### Stop email flood
 
 (Use stop-and-delete-email-alerts.sql if you're not interested in alert history)
 
-    # sudo service zabbix-server stop
-    # psql zabbix < stop-email-alerts.sql
-    # sudo service zabbix-server start
+    sudo service zabbix-server stop
+    psql zabbix < stop-email-alerts.sql
+    sudo service zabbix-server start
