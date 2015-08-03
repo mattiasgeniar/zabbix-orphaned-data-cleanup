@@ -59,7 +59,7 @@ This deletes all history for disabled items. May come in handy when you disable 
 
 #### LLD triggers
 
-Zabbix will create automatically create "Mounted Filesystem Discovery" triggers, which you can't delete or remove from the web interface. These queries will allow you to delete them all at once (disk space and inodes). [Inspired by.](#https://www.zabbix.com/forum/showthread.php?t=44028)
+Zabbix will create automatically create "Mounted Filesystem Discovery" triggers, which you can't disable or delete from the web interface. These queries will allow you to delete them all at once (disk space and inodes). [Inspired by.](#https://www.zabbix.com/forum/showthread.php?t=44028)
 
     mysql zabbix < check-lld-triggers.my.sql
     psql -A -R ' : '  -P 'footer=off' zabbix < check-lld-triggers.pg.sql
