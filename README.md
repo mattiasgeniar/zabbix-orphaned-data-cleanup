@@ -8,6 +8,7 @@ This repo contains a few useful queries for Zabbix database, mostly to cleanup o
   * [Old data] (#old-data)
   * [Unused data] (#unused-data)
   * [Stop email flood] (#stop-email-flood)
+  * [LLD triggers] (#lld-triggers)
 
 ### Important notes
 
@@ -55,3 +56,12 @@ This deletes all history for disabled items. May come in handy when you disable 
     sudo service zabbix-server stop
     psql zabbix < stop-email-alerts.sql
     sudo service zabbix-server start
+
+#### LLD triggers
+
+Zabbix will create automatically create "Mounted Filesystem Discovery" triggers, which you can't delete or remove from the web interface. These queries will allow you to delete them all at once (disk space and inodes).
+    mysql zabbix < check-lld-triggers.my.sql
+    psql -A -R ' : '  -P 'footer=off' zabbix < check-lld-triggers.pg.sql
+
+    mysql zabbix < delete-lld-triggers.my.sql
+    psql -A -R ' : '  -P 'footer=off' zabbix < delete-lld-triggers.pg.sql
