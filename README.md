@@ -9,11 +9,11 @@ Usage: check how many orphaned rows you have
 
 These queries are safe to run, but if you have a large database please note that these can take a while (read: a few hours is normal).
 
-    user@host-$ mysql zabbix < checkscript.sql
+    user@host-$ mysql -f zabbix < checkscript.sql
 
 Usage: delete the orphaned rows
 ===============================
 
 Use the queries above on your won risk. Take *backups* first. Once you have back-ups, go ahead and be brave.
 
-     user@host-$ mysql zabbix < cleanup.sql
+     user@host-$ mysql -f zabbix < cleanup.sql
