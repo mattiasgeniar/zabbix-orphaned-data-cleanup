@@ -12,7 +12,7 @@ This repo contains a few useful queries for Zabbix database, mostly to cleanup o
 ### Important notes
 
 * If you have a large database please note that these can take a while (a few hours is normal).
-* Use the queries on your own risk. Take **backups** first. The queries were (mostly) tested against Zabbix 1.8-2.2. 
+* Use the queries on your own risk. Take **backups** first. The queries were (mostly) tested against Zabbix 1.8-3.0.
 * Some scripts are Mysql or Postgresql specific, they're named *.my.sql and *.pg.sql, respectively. Some are also Zabbix version specific. Filenames are self-explaining.
 * Patches are welcome.
 
