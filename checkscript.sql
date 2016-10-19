@@ -26,10 +26,6 @@ SELECT COUNT(*) FROM functions WHERE NOT triggerid IN (SELECT triggerid FROM tri
 SELECT COUNT(*) FROM graphs_items WHERE NOT graphid IN (SELECT graphid FROM graphs);
 SELECT COUNT(*) FROM graphs_items WHERE NOT itemid IN (SELECT itemid FROM items);
 
--- Count the amount of rows that would be deleted for orphaned host_profiles
-SELECT COUNT(*) FROM hosts_profiles WHERE NOT hostid IN (SELECT hostid FROM hosts);
-SELECT COUNT(*) FROM hosts_profiles_ext WHERE NOT hostid IN (SELECT hostid FROM hosts);
-
 -- Count the amount of rows that would be deleted for orphaned host macro's
 SELECT COUNT(*) FROM hostmacro WHERE NOT hostid IN (SELECT hostid FROM hosts);
 
@@ -55,13 +51,12 @@ SELECT COUNT(*) FROM maintenances_windows WHERE timeperiodid NOT IN (SELECT time
 -- Count the amount of rows that would be deleted for orphaned mappings
 SELECT COUNT(*) FROM mappings WHERE NOT valuemapid IN (SELECT valuemapid FROM valuemaps);
 
--- Count the amount of rows that would be deleted for orphaned media / user items
+-- Count the amount of rows that would be deleted for orphaned media items
 SELECT COUNT(*) FROM media WHERE NOT userid IN (SELECT userid FROM users);
 SELECT COUNT(*) FROM media WHERE NOT mediatypeid IN (SELECT mediatypeid FROM media_type);
 SELECT COUNT(*) FROM rights WHERE NOT groupid IN (SELECT usrgrpid FROM usrgrp);
 SELECT COUNT(*) FROM rights WHERE NOT id IN (SELECT groupid FROM groups);
 SELECT COUNT(*) FROM sessions WHERE NOT userid IN (SELECT userid FROM users);
-SELECT COUNT(*) FROM user_history WHERE NOT userid IN (SELECT userid FROM users);
 
 -- Count the amount of rows that would be deleted for orphaned screens
 SELECT COUNT(*) FROM screens_items WHERE screenid NOT IN (SELECT screenid FROM screens);
@@ -75,7 +70,6 @@ SELECT COUNT(itemid) FROM history WHERE itemid NOT IN (SELECT itemid FROM items)
 SELECT COUNT(itemid) FROM history_uint WHERE itemid NOT IN (SELECT itemid FROM items);
 SELECT COUNT(itemid) FROM history_log WHERE itemid NOT IN (SELECT itemid FROM items);
 SELECT COUNT(itemid) FROM history_str WHERE itemid NOT IN (SELECT itemid FROM items);
-SELECT COUNT(itemid) FROM history_sync WHERE itemid NOT IN (SELECT itemid FROM items);
 SELECT COUNT(itemid) FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);
 
 SELECT COUNT(itemid) FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);
