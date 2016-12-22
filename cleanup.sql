@@ -65,7 +65,7 @@ DELETE FROM screens_items WHERE screenid NOT IN (SELECT screenid FROM screens);
 DELETE FROM trigger_depends WHERE triggerid_down NOT IN (SELECT triggerid FROM triggers);
 DELETE FROM trigger_depends WHERE triggerid_up NOT IN (SELECT triggerid FROM triggers);
 
--- Count the amount of records in the history/trends table for items that no longer exist
+-- Delete records in the history/trends table where items that no longer exist
 DELETE FROM history WHERE itemid NOT IN (SELECT itemid FROM items);
 DELETE FROM history_uint WHERE itemid NOT IN (SELECT itemid FROM items);
 DELETE FROM history_log WHERE itemid NOT IN (SELECT itemid FROM items);
@@ -74,3 +74,8 @@ DELETE FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);
 
 DELETE FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);
 DELETE FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);
+
+-- Delete records in the events table where triggers/items that no longer exist
+DELETE FROM events WHERE source = 0 and object = 0 and objectid not in (select triggerid from triggers);
+DELETE FROM events WHERE source = 3 and object = 0 and objectid not in (select triggerid from triggers);
+DELETE FROM events WHERE source = 3 and object = 4 and objectid not in (select itemid from items);
