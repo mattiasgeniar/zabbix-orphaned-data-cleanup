@@ -74,3 +74,8 @@ SELECT COUNT(itemid) FROM history_text WHERE itemid NOT IN (SELECT itemid FROM i
 
 SELECT COUNT(itemid) FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);
 SELECT COUNT(itemid) FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);
+
+-- Count the amount of records in the events table for triggers/items that no longer exist
+SELECT COUNT(eventid) FROM events WHERE source = 0 and object = 0 and objectid not in (select triggerid from triggers);
+SELECT COUNT(eventid) FROM events WHERE source = 3 and object = 0 and objectid not in (select triggerid from triggers);
+SELECT COUNT(eventid) FROM events WHERE source = 3 and object = 4 and objectid not in (select itemid from items);
