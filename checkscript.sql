@@ -1,7 +1,3 @@
--- Count the amount of rows that would be deleted for all orphaned acknowledge entries
-SELECT COUNT(*) FROM acknowledges WHERE NOT userid IN (SELECT userid FROM users);
-SELECT COUNT(*) FROM acknowledges WHERE NOT eventid IN (SELECT eventid FROM events);
-
 -- Count the amount of rows that would be deleted for orphaned alerts entries
 SELECT COUNT(*) FROM alerts WHERE NOT actionid IN (SELECT actionid FROM actions);
 SELECT COUNT(*) FROM alerts WHERE NOT eventid IN (SELECT eventid FROM events);
@@ -81,5 +77,7 @@ SELECT COUNT(eventid) FROM events WHERE source = 3 AND object = 0 AND objectid N
 SELECT COUNT(eventid) FROM events WHERE source = 3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items);
 
 -- Count the amount of acknowledges in the acknowledges table for events which would be deleted previously
+SELECT COUNT(*) FROM acknowledges WHERE NOT eventid IN (SELECT eventid FROM events);
+SELECT COUNT(*) FROM acknowledges WHERE NOT userid IN (SELECT userid FROM users);
 SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE (source = 0 OR source=3) AND object = 0 AND objectid NOT IN (SELECT triggerid FROM triggers));
 SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE source=3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items));
