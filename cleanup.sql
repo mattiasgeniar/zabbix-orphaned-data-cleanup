@@ -77,5 +77,5 @@ DELETE FROM events WHERE source = 3 AND object = 0 AND objectid NOT IN (SELECT t
 DELETE FROM events WHERE source = 3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items);
 
 -- Delete all orphaned acknowledge entries
-DELETE FROM acknowledges WHERE eventid NOT IN (FROM eventid FROM events);
-DELETE FROM acknowledges WHERE NOT userid IN (SELECT userid FROM users);
+DELETE FROM acknowledges WHERE eventid NOT IN (SELECT eventid FROM events);
+DELETE FROM acknowledges WHERE userid NOT IN (SELECT userid FROM users);
