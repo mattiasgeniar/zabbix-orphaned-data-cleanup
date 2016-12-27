@@ -75,7 +75,10 @@ DELETE FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);
 DELETE FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);
 DELETE FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);
 
--- Delete records in the events table where triggers/items that no longer exist
-DELETE FROM events WHERE source = 0 and object = 0 and objectid not in (select triggerid from triggers);
-DELETE FROM events WHERE source = 3 and object = 0 and objectid not in (select triggerid from triggers);
-DELETE FROM events WHERE source = 3 and object = 4 and objectid not in (select itemid from items);
+-- Delete records in the events table where triggers/items no longer exist
+DELETE FROM events WHERE source = 0 AND object = 0 AND objectid NOT IN (SELECT triggerid FROM triggers);
+DELETE FROM events WHERE source = 3 AND object = 0 AND objectid NOT IN (SELECT triggerid FROM triggers);
+DELETE FROM events WHERE source = 3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items);
+
+-- Delete records in the acknowledges table where events not longer exist
+DELETE FROM acknowledges WHERE eventid NOT IN (FROM eventid FROM events);
