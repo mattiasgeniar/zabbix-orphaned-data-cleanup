@@ -1,7 +1,3 @@
--- Delete all orphaned acknowledge entries
-DELETE FROM acknowledges WHERE NOT userid IN (SELECT userid FROM users);
-DELETE FROM acknowledges WHERE NOT eventid IN (SELECT eventid FROM events);
-
 -- Delete orphaned alerts entries
 DELETE FROM alerts WHERE NOT actionid IN (SELECT actionid FROM actions);
 DELETE FROM alerts WHERE NOT eventid IN (SELECT eventid FROM events);
@@ -75,7 +71,11 @@ DELETE FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);
 DELETE FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);
 DELETE FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);
 
--- Delete records in the events table where triggers/items that no longer exist
-DELETE FROM events WHERE source = 0 and object = 0 and objectid not in (select triggerid from triggers);
-DELETE FROM events WHERE source = 3 and object = 0 and objectid not in (select triggerid from triggers);
-DELETE FROM events WHERE source = 3 and object = 4 and objectid not in (select itemid from items);
+-- Delete records in the events table where triggers/items no longer exist
+DELETE FROM events WHERE source = 0 AND object = 0 AND objectid NOT IN (SELECT triggerid FROM triggers);
+DELETE FROM events WHERE source = 3 AND object = 0 AND objectid NOT IN (SELECT triggerid FROM triggers);
+DELETE FROM events WHERE source = 3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items);
+
+-- Delete all orphaned acknowledge entries
+DELETE FROM acknowledges WHERE eventid NOT IN (SELECT eventid FROM events);
+DELETE FROM acknowledges WHERE userid NOT IN (SELECT userid FROM users);
