@@ -2,13 +2,13 @@
 
 This repo contains a few useful queries for Zabbix database, mostly to cleanup old and/or orphaned data.
 
-- [Important notes] (#important-notes)
-- [Usage] (#usage)
-  * [Orphaned data] (#orphaned-data)
-  * [Old data] (#old-data)
-  * [Unused data] (#unused-data)
-  * [Stop email flood] (#stop-email-flood)
-  * [LLD triggers] (#lld-triggers)
+- [Important notes](#important-notes)
+- [Usage](#usage)
+  * [Orphaned data](#orphaned-data)
+  * [Old data](#old-data)
+  * [Unused data](#unused-data)
+  * [Stop email flood](#stop-email-flood)
+  * [LLD triggers](#lld-triggers)
 
 ### Important notes
 
