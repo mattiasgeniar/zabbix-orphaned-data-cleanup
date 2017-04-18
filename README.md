@@ -39,6 +39,8 @@ This set of queries allows you to delete all data older than a specified period.
     mysql zabbix < delete-old-data.my.sql
     psql -A -R ' : ' -P 'footer=off' zabbix < delete-old-data.pg.sql
 
+**NOTE**: due to the way the databases work (Mysql in particular), running these scripts won't reduce Zabbix db size if it's already bloated. You will have to dump and reload the db after that. What the scripts do is keep its size more or less constant if you run them regularly.
+
 #### Unused data
 
 This deletes all history for disabled items. May come in handy when you disable a significant number of items and no longer need the collected data.
