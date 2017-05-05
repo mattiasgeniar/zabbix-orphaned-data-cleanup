@@ -13,7 +13,6 @@ export CONF_FILE="$TMP_FILE"
 
 mysql_w(){
     mysql -u$username -p"$password" "$database" -NBe "${*} SELECT ROW_COUNT();"
-    mysql -u$username -p"$password" "$database" -NBe ""
 }
 
 echo "Delete orphaned alerts entries"
