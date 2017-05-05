@@ -11,9 +11,17 @@ These queries are safe to run, but if you have a large database please note that
 
     user@host-$ mysql -f zabbix < checkscript.sql
 
+or
+
+    user@host-$ ./checkscript.sh
+
 Usage: delete the orphaned rows
 ===============================
 
 Use the queries above on your won risk. Take *backups* first. Once you have back-ups, go ahead and be brave.
 
      user@host-$ mysql -f zabbix < cleanup.sql
+
+or
+
+    user@host-$ ./cleanup.sh
