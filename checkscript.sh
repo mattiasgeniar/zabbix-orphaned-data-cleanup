@@ -1,18 +1,22 @@
 #!/bin/bash
+export CONF
+CONF="$(mktemp)"
+
+cleanup_conf(){ rm "$CONF"; }
+trap cleanup_conf SIGINT SIGTERM EXIT
+
 echo -n "MySQL username: " ; read -r username
 echo -n "MySQL password: " ; stty -echo ; read -r password ; stty echo ; echo
 echo -n "MySQL database: " ; read -r database
-TMP_FILE="$(mktemp)"
 
 {
     echo [client]
     echo user     = "$username"
     echo password = "$password"
-} > "$TMP_FILE"
-export CONF_FILE="$TMP_FILE"
+} > "$CONF"
 
 mysql_w(){
-    mysql -u"$username" -p"$password" "$database" -NBe "$*"
+    mysql --defaults-file="$CONF" "$database" -NBe "$*"
 }
 
 
@@ -194,5 +198,3 @@ mysql_w "SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT 
 
 echo -n "Table: acknowledges orphaned events(src=3, obj=4): "
 mysql_w "SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE source=3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items));"
-
-rm "$TMP_FILE"
