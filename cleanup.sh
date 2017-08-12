@@ -153,26 +153,11 @@ mysql_w "DELETE FROM trigger_depends WHERE triggerid_up NOT IN (SELECT triggerid
 
 
 echo "Delete records in the history/trends table where items that no longer exist"
-echo -n "Table: history orphaned items: "
-mysql_w "DELETE FROM history WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_uint orphaned items: "
-mysql_w "DELETE FROM history_uint WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_log orphaned items: "
-mysql_w "DELETE FROM history_log WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_str orphaned items: "
-mysql_w "DELETE FROM history_str WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_text orphaned items: "
-mysql_w "DELETE FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: trends orphaned items: "
-mysql_w "DELETE FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: trends_uint orphaned items: "
-mysql_w "DELETE FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);"
+TABLES=(history history_uint history_log history_str history_text trends trends_uint)
+for table in "${TABLES[@]}"; do
+        echo -n "Table: $table orphaned items: "
+        mysql_w "DELETE FROM $table WHERE itemid NOT IN (SELECT itemid FROM items);"
+done
 
 
 echo "Delete records in the events table where triggers/items no longer exist"

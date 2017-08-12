@@ -153,26 +153,11 @@ mysql_w "SELECT COUNT(*) FROM trigger_depends WHERE triggerid_up NOT IN (SELECT 
 
 
 echo "Count the amount of records in the history/trends table for items that no longer exist"
-echo -n "Table: history orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_uint orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history_uint WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_log orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history_log WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_str orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history_str WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_text orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: trends orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: trends_uint orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);"
+TABLES=(history history_uint history_log history_str history_text trends trends_uint)
+for table in "${TABLES[@]}"; do
+        echo -n "Table: $table orphaned items: "
+        mysql_w "SELECT COUNT(itemid) FROM $table WHERE itemid NOT IN (SELECT itemid FROM items);"
+done
 
 
 echo "Count the amount of records in the events table for triggers/items that no longer exist"
