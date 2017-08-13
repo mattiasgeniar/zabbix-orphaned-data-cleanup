@@ -17,6 +17,7 @@ echo -n "MySQL database: " ; read -r database
 } > "$CONF"
 
 mysql_w(){
+    [ ! -f "$CONF" ] && exit 1
     mysql --defaults-file="$CONF" -NBe "$*"
 }
 
