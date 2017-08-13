@@ -13,10 +13,11 @@ echo -n "MySQL database: " ; read -r database
     echo [client]
     echo user     = "$username"
     echo password = "$password"
+    echo database = "$database"
 } > "$CONF"
 
 mysql_w(){
-    mysql --defaults-file="$CONF" "$database" -NBe "${*} SELECT ROW_COUNT();"
+    mysql --defaults-file="$CONF" -NBe "${*} SELECT ROW_COUNT();"
 }
 
 
