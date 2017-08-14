@@ -1,8 +1,15 @@
 #!/bin/bash
-export CONF
+export CONF ORPHANED_ITEMIDs=() FILES=() CPU_COUNT
+
+CPU_COUNT=$(nproc)
+# Let's free some space for other threads on machine
+((CPU_COUNT > 1)) && CPU_COUNT=$((CPU_COUNT-1))
+
 CONF="$(mktemp)"
 
-cleanup_conf(){ rm "$CONF"; }
+FILES+=("$CONF")
+
+cleanup_conf(){ rm -f "${FILES[@]}"; }
 trap cleanup_conf SIGINT SIGTERM EXIT
 
 if [ ! -z "$1" ] && [ -f "$1" ]; then
@@ -165,11 +172,31 @@ echo -n "Table: trigger_depends orphaned triggers(triggerid_up): "
 mysql_w "DELETE FROM trigger_depends WHERE triggerid_up NOT IN (SELECT triggerid FROM triggers);"
 
 
+mysql_w_l(){
+    [ ! -f "$CONF" ] && exit 1
+    mysql --defaults-file="$CONF" -NBe "${*}"
+}
+
+# xargs can only run external script/binary
+TMP_SCRIPT=$(mktemp)
+chmod +x "$TMP_SCRIPT"
+FILES+=("$TMP_SCRIPT")
+
 echo "Delete records in the history/trends table where items that no longer exist"
 TABLES=(history history_uint history_log history_str history_text trends trends_uint)
 for table in "${TABLES[@]}"; do
-        echo -n "Table: $table orphaned items: "
-        mysql_w "DELETE FROM $table WHERE itemid NOT IN (SELECT itemid FROM items);"
+        ORPHANED_ITEMIDs=(
+                $(mysql_w_l "SELECT DISTINCT(itemid) FROM $table WHERE itemid NOT IN (SELECT itemid FROM items);")
+        )
+        echo "Table: $table orphaned items: ${#ORPHANED_ITEMIDs[@]}"
+        {
+                echo "#!/bin/bash"
+                echo mysql --defaults-file="$CONF" -NBe \"DELETE FROM $table WHERE itemid = \$1\;\"
+        } > "$TMP_SCRIPT"
+        # Use xargs for parallel deletion
+        if ((${#ORPHANED_ITEMIDs[@]} > 0)); then
+                echo "${ORPHANED_ITEMIDs[@]}" | xargs -n 1 -P $CPU_COUNT $TMP_SCRIPT
+        fi
 done
 
 
