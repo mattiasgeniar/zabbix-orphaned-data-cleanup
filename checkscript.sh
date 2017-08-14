@@ -5,16 +5,27 @@ CONF="$(mktemp)"
 cleanup_conf(){ rm "$CONF"; }
 trap cleanup_conf SIGINT SIGTERM EXIT
 
-echo -n "MySQL username: " ; read -r username
-echo -n "MySQL password: " ; stty -echo ; read -r password ; stty echo ; echo
-echo -n "MySQL database: " ; read -r database
+if [ ! -z "$1" ] && [ -f "$1" ]; then
+    echo "Use cnf file: $1"
+    for val in user password database; do
+        grep -q "$val" "$1" || {
+            echo "Missing $val field in $1"
+            exit 1
+        }
+    done
+    cp "$1" "$CONF"
+else
+    echo -n "MySQL username: " ; read -r username
+    echo -n "MySQL password: " ; stty -echo ; read -r password ; stty echo ; echo
+    echo -n "MySQL database: " ; read -r database
 
-{
-    echo [client]
-    echo user     = "$username"
-    echo password = "$password"
-    echo database = "$database"
-} > "$CONF"
+    {
+        echo [client]
+        echo user     = "$username"
+        echo password = "$password"
+        echo database = "$database"
+    } > "$CONF"
+fi
 
 mysql_w(){
     [ ! -f "$CONF" ] && exit 1

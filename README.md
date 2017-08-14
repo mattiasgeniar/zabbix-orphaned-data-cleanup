@@ -14,6 +14,7 @@ These queries are safe to run, but if you have a large database please note that
 or
 
     user@host-$ ./checkscript.sh
+    user@host-$ ./checkscript.sh ./zbx_db_info.cnf
 
 Usage: delete the orphaned rows
 ===============================
@@ -25,3 +26,4 @@ Use the queries above on your won risk. Take *backups* first. Once you have back
 or
 
     user@host-$ ./cleanup.sh
+    user@host-$ ./cleanup.sh ./zbx_db_info.cnf
