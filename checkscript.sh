@@ -1,18 +1,35 @@
 #!/bin/bash
-echo -n "MySQL username: " ; read -r username
-echo -n "MySQL password: " ; stty -echo ; read -r password ; stty echo ; echo
-echo -n "MySQL database: " ; read -r database
-TMP_FILE="$(mktemp)"
+export CONF
+CONF="$(mktemp)"
 
-{
-    echo [client]
-    echo user     = "$username"
-    echo password = "$password"
-} > "$TMP_FILE"
-export CONF_FILE="$TMP_FILE"
+cleanup_conf(){ rm "$CONF"; }
+trap cleanup_conf SIGINT SIGTERM EXIT
+
+if [ ! -z "$1" ] && [ -f "$1" ]; then
+    echo "Use cnf file: $1"
+    for val in user password database; do
+        grep -q "$val" "$1" || {
+            echo "Missing $val field in $1"
+            exit 1
+        }
+    done
+    cp "$1" "$CONF"
+else
+    echo -n "MySQL username: " ; read -r username
+    echo -n "MySQL password: " ; stty -echo ; read -r password ; stty echo ; echo
+    echo -n "MySQL database: " ; read -r database
+
+    {
+        echo [client]
+        echo user     = "$username"
+        echo password = "$password"
+        echo database = "$database"
+    } > "$CONF"
+fi
 
 mysql_w(){
-    mysql -u"$username" -p"$password" "$database" -NBe "$*"
+    [ ! -f "$CONF" ] && exit 1
+    mysql --defaults-file="$CONF" -NBe "$*"
 }
 
 
@@ -149,26 +166,11 @@ mysql_w "SELECT COUNT(*) FROM trigger_depends WHERE triggerid_up NOT IN (SELECT 
 
 
 echo "Count the amount of records in the history/trends table for items that no longer exist"
-echo -n "Table: history orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_uint orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history_uint WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_log orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history_log WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_str orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history_str WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_text orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: trends orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: trends_uint orphaned items: "
-mysql_w "SELECT COUNT(itemid) FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);"
+TABLES=(history history_uint history_log history_str history_text trends trends_uint)
+for table in "${TABLES[@]}"; do
+        echo -n "Table: $table orphaned items: "
+        mysql_w "SELECT COUNT(itemid) FROM $table WHERE itemid NOT IN (SELECT itemid FROM items);"
+done
 
 
 echo "Count the amount of records in the events table for triggers/items that no longer exist"
@@ -194,5 +196,3 @@ mysql_w "SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT 
 
 echo -n "Table: acknowledges orphaned events(src=3, obj=4): "
 mysql_w "SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE source=3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items));"
-
-rm "$TMP_FILE"

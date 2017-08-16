@@ -1,19 +1,44 @@
 #!/bin/bash
-echo -n "MySQL username: " ; read -r username
-echo -n "MySQL password: " ; stty -echo ; read -r password ; stty echo ; echo
-echo -n "MySQL database: " ; read -r database
-TMP_FILE="$(mktemp)"
+export CONF ORPHANED_ITEMIDs=() FILES=() CPU_COUNT
 
-{
-    echo [client]
-    echo user     = "$username"
-    echo password = "$password"
-} > "$TMP_FILE"
-export CONF_FILE="$TMP_FILE"
+CPU_COUNT=$(nproc)
+# Let's free some space for other threads on machine
+((CPU_COUNT > 1)) && CPU_COUNT=$((CPU_COUNT-1))
+
+CONF="$(mktemp)"
+
+FILES+=("$CONF")
+
+cleanup_conf(){ rm -f "${FILES[@]}"; }
+trap cleanup_conf SIGINT SIGTERM EXIT
+
+if [ ! -z "$1" ] && [ -f "$1" ]; then
+    echo "Use cnf file: $1"
+    for val in user password database; do
+        grep -q "$val" "$1" || {
+            echo "Missing $val field in $1"
+            exit 1
+        }
+    done
+    cp "$1" "$CONF"
+else
+    echo -n "MySQL username: " ; read -r username
+    echo -n "MySQL password: " ; stty -echo ; read -r password ; stty echo ; echo
+    echo -n "MySQL database: " ; read -r database
+
+    {
+        echo [client]
+        echo user     = "$username"
+        echo password = "$password"
+        echo database = "$database"
+    } > "$CONF"
+fi
 
 mysql_w(){
-    mysql -u$username -p"$password" "$database" -NBe "${*} SELECT ROW_COUNT();"
+    [ ! -f "$CONF" ] && exit 1
+    mysql --defaults-file="$CONF" -NBe "${*} SELECT ROW_COUNT();"
 }
+
 
 echo "Delete orphaned alerts entries"
 echo -n "Table: alerts orphaned actions: "
@@ -147,27 +172,32 @@ echo -n "Table: trigger_depends orphaned triggers(triggerid_up): "
 mysql_w "DELETE FROM trigger_depends WHERE triggerid_up NOT IN (SELECT triggerid FROM triggers);"
 
 
+mysql_w_l(){
+    [ ! -f "$CONF" ] && exit 1
+    mysql --defaults-file="$CONF" -NBe "${*}"
+}
+
+# xargs can only run external script/binary
+TMP_SCRIPT=$(mktemp)
+chmod +x "$TMP_SCRIPT"
+FILES+=("$TMP_SCRIPT")
+
 echo "Delete records in the history/trends table where items that no longer exist"
-echo -n "Table: history orphaned items: "
-mysql_w "DELETE FROM history WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_uint orphaned items: "
-mysql_w "DELETE FROM history_uint WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_log orphaned items: "
-mysql_w "DELETE FROM history_log WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_str orphaned items: "
-mysql_w "DELETE FROM history_str WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: history_text orphaned items: "
-mysql_w "DELETE FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: trends orphaned items: "
-mysql_w "DELETE FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);"
-
-echo -n "Table: trends_uint orphaned items: "
-mysql_w "DELETE FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);"
+TABLES=(history history_uint history_log history_str history_text trends trends_uint)
+for table in "${TABLES[@]}"; do
+        ORPHANED_ITEMIDs=(
+                $(mysql_w_l "SELECT DISTINCT(itemid) FROM $table WHERE itemid NOT IN (SELECT itemid FROM items);")
+        )
+        echo "Table: $table orphaned items: ${#ORPHANED_ITEMIDs[@]}"
+        {
+                echo "#!/bin/bash"
+                echo mysql --defaults-file="$CONF" -NBe \"DELETE FROM $table WHERE itemid = \$1\;\"
+        } > "$TMP_SCRIPT"
+        # Use xargs for parallel deletion
+        if ((${#ORPHANED_ITEMIDs[@]} > 0)); then
+                echo "${ORPHANED_ITEMIDs[@]}" | xargs -n 1 -P $CPU_COUNT $TMP_SCRIPT
+        fi
+done
 
 
 echo "Delete records in the events table where triggers/items no longer exist"
@@ -193,5 +223,3 @@ mysql_w "DELETE FROM acknowledges WHERE eventid IN (SELECT eventid FROM events W
 
 echo -n "Table: acknowledges orphaned events(src=3, obj=4): "
 mysql_w "DELETE FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE source=3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items));"
-
-rm "$TMP_FILE"
