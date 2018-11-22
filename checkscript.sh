@@ -2,7 +2,7 @@
 export CONF
 CONF="$(mktemp)"
 
-cleanup_conf(){ rm "$CONF"; }
+cleanup_conf(){ rm -f "$CONF"; stty echo; exit;}
 trap cleanup_conf SIGINT SIGTERM EXIT
 
 if [ ! -z "$1" ] && [ -f "$1" ]; then
