@@ -9,7 +9,7 @@ CONF="$(mktemp)"
 
 FILES+=("$CONF")
 
-cleanup_conf(){ rm -f "${FILES[@]}"; }
+cleanup_conf(){ rm -f "${FILES[@]}"; stty echo; exit;}
 trap cleanup_conf SIGINT SIGTERM EXIT
 
 if [ ! -z "$1" ] && [ -f "$1" ]; then
