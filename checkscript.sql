@@ -1,6 +1,6 @@
 -- Count the amount of rows that would be deleted for orphaned alerts entries
-SELECT COUNT(*) FROM alerts WHERE NOT actionid IN (SELECT actionid FROM actions);
-SELECT COUNT(*) FROM alerts WHERE NOT eventid IN (SELECT eventid FROM events);
+SELECT COUNT(*) FROM alerts WHERE NOT EXISTS (SELECT 1 FROM actions WHERE alerts.actionid = actions.actionid);
+SELECT COUNT(*) FROM alerts WHERE NOT EXISTS (SELECT 1 FROM events WHERE alerts.eventid = events.eventid);
 SELECT COUNT(*) FROM alerts WHERE NOT userid IN (SELECT userid FROM users);
 SELECT COUNT(*) FROM alerts WHERE NOT mediatypeid IN (SELECT mediatypeid FROM media_type);
 
@@ -62,14 +62,14 @@ SELECT COUNT(*) FROM trigger_depends WHERE triggerid_down NOT IN (SELECT trigger
 SELECT COUNT(*) FROM trigger_depends WHERE triggerid_up NOT IN (SELECT triggerid FROM triggers);
 
 -- Count the amount of records in the history/trends table for items that no longer exist
-SELECT COUNT(itemid) FROM history WHERE itemid NOT IN (SELECT itemid FROM items);
-SELECT COUNT(itemid) FROM history_uint WHERE itemid NOT IN (SELECT itemid FROM items);
-SELECT COUNT(itemid) FROM history_log WHERE itemid NOT IN (SELECT itemid FROM items);
-SELECT COUNT(itemid) FROM history_str WHERE itemid NOT IN (SELECT itemid FROM items);
-SELECT COUNT(itemid) FROM history_text WHERE itemid NOT IN (SELECT itemid FROM items);
+SELECT COUNT(itemid) FROM history WHERE NOT EXISTS (SELECT 1 FROM items WHERE history.itemid = items.itemid);
+SELECT COUNT(itemid) FROM history_uint WHERE NOT EXISTS (SELECT 1 FROM items WHERE history_uint.itemid = items.itemid);
+SELECT COUNT(itemid) FROM history_log WHERE NOT EXISTS (SELECT 1 FROM items WHERE history_log.itemid = items.itemid);
+SELECT COUNT(itemid) FROM history_str WHERE NOT EXISTS (SELECT 1 FROM items WHERE history_str.itemid = items.itemid);
+SELECT COUNT(itemid) FROM history_text WHERE NOT EXISTS (SELECT 1 FROM items WHERE history_text.itemid = items.itemid);
 
-SELECT COUNT(itemid) FROM trends WHERE itemid NOT IN (SELECT itemid FROM items);
-SELECT COUNT(itemid) FROM trends_uint WHERE itemid NOT IN (SELECT itemid FROM items);
+SELECT COUNT(itemid) FROM trends WHERE NOT EXISTS (SELECT 1 FROM items WHERE trends.itemid = items.itemid);
+SELECT COUNT(itemid) FROM trends_uint WHERE NOT EXISTS (SELECT 1 FROM items WHERE trends_uint.itemid = items.itemid);
 
 -- Count the amount of records in the events table for triggers/items that no longer exist
 SELECT COUNT(eventid) FROM events WHERE source = 0 AND object = 0 AND objectid NOT IN (SELECT triggerid FROM triggers);
@@ -81,3 +81,4 @@ SELECT COUNT(*) FROM acknowledges WHERE NOT eventid IN (SELECT eventid FROM even
 SELECT COUNT(*) FROM acknowledges WHERE NOT userid IN (SELECT userid FROM users);
 SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE (source = 0 OR source=3) AND object = 0 AND objectid NOT IN (SELECT triggerid FROM triggers));
 SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE source=3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items));
+
