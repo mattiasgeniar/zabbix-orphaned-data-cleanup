@@ -82,3 +82,6 @@ SELECT COUNT(*) FROM acknowledges WHERE NOT userid IN (SELECT userid FROM users)
 SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE (source = 0 OR source=3) AND object = 0 AND objectid NOT IN (SELECT triggerid FROM triggers));
 SELECT COUNT(acknowledgeid) FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE source=3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items));
 
+-- Count the amount of records in the housekeep table for items that no longe exist
+
+SELECT COUNT(*) FROM housekeeper WHERE NOT value IN (select itemid from items);
