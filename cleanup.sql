@@ -82,3 +82,6 @@ DELETE FROM acknowledges WHERE NOT userid IN (SELECT userid FROM users);
 DELETE FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE (source = 0 OR source=3) AND object = 0 AND objectid NOT IN (SELECT triggerid FROM triggers));
 DELETE FROM acknowledges WHERE eventid IN (SELECT eventid FROM events WHERE source=3 AND object = 4 AND objectid NOT IN (SELECT itemid FROM items));
 
+-- Delete all orphaned  housekeep
+
+DELETE FROM housekeeper WHERE NOT value IN (select itemid from items);
